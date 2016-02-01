@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.hr.cmi.inf.Entities.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
@@ -17,11 +20,20 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Optional;
 
+@PropertySource("classpath:application.properties")
 @SpringBootApplication
 public class JtoonApplication implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(JtoonApplication.class);
 
+    @Value("${toonapi.username}")
+    String USERNAME;
+
+    @Value("${toonapi.password}")
+    String PASSWORD;
+
+    @Value("${toonapi.apitoken}")
+    String APITOKEN;
 
     public static void main(String[] args) {
         SpringApplication.run(JtoonApplication.class, args);
@@ -29,7 +41,7 @@ public class JtoonApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-
+        getToken().ifPresent(System.out::print);
     }
 
     public Optional<Token> getToken(){
@@ -61,7 +73,7 @@ public class JtoonApplication implements CommandLineRunner {
             System.out.println(result);
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(result, Token.class);
+            return null;//mapper.readValue(result, Token.class);
 
         } catch (Exception e) {
             String errMsg = "There was an error: " + e.getMessage();
