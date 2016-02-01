@@ -1,5 +1,7 @@
 package nl.hr.cmi.inf;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.hr.cmi.inf.Entities.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +15,7 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Optional;
 
 @SpringBootApplication
 public class JtoonApplication implements CommandLineRunner {
@@ -26,6 +29,10 @@ public class JtoonApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+
+    }
+
+    public Optional<Token> getToken(){
         try {
             String data = String.format("grant_type=password&username=%s&password=%s", USERNAME, PASSWORD);
 
@@ -50,16 +57,20 @@ public class JtoonApplication implements CommandLineRunner {
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
             System.out.println("token:");
-            String result = reader.lines().reduce("", String::concat);//forEach(System.out::println);
+            String result = reader.lines().reduce("", String::concat);
             System.out.println(result);
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(result, Token.class);
+
         } catch (Exception e) {
             String errMsg = "There was an error: " + e.getMessage();
             System.err.println(errMsg);
             e.printStackTrace();
         }
 
+        return Optional.empty();
     }
-
 
     //Trust any certificate
     //https://gist.github.com/michalbcz/4170520
