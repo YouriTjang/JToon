@@ -20,7 +20,6 @@ public class JtoonApplication implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(JtoonApplication.class);
 
 
-
     public static void main(String[] args) {
         SpringApplication.run(JtoonApplication.class, args);
     }
@@ -28,7 +27,7 @@ public class JtoonApplication implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         try {
-            String data = String.format("grant_type=password&username=%s&%s", USERNAME, PASSWORD);
+            String data = String.format("grant_type=password&username=%s&password=%s", USERNAME, PASSWORD);
 
             disableCertificateValidation();
 
@@ -50,59 +49,20 @@ public class JtoonApplication implements CommandLineRunner {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-
             System.out.println("token:");
-            reader.lines().forEach(System.out::println);
-
+            String result = reader.lines().reduce("", String::concat);//forEach(System.out::println);
+            System.out.println(result);
         } catch (Exception e) {
             String errMsg = "There was an error: " + e.getMessage();
             System.err.println(errMsg);
             e.printStackTrace();
         }
+
     }
 
 
     //Trust any certificate
     //https://gist.github.com/michalbcz/4170520
-//    public static void test(String [] args) throws Exception {
-//        // configure the SSLContext with a TrustManager
-//        SSLContext ctx = SSLContext.getInstance("SSL");
-//        ctx.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
-//        SSLContext.setDefault(ctx);
-//
-////        URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
-//        URL url = new URL("https://jsonplaceholder.typicode.com/posts/1/comments");
-//        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-//        conn.setRequestMethod("GET");
-//        String userpass = username + ":" + password;
-//        String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-//        con.setRequestProperty ("Authorization", basicAuth);
-//
-//        con.addRequestProperty("Accept", "application/json");
-//        con.getOutputStream().write(data.getBytes("UTF-8"));
-//
-//        conn.setHostnameVerifier((arg0, arg1) -> true);
-//
-//        System.out.println(conn.getResponseCode());
-//        System.out.println(conn.getContent());
-//
-//        conn.disconnect();
-//    }
-//
-//    private static class DefaultTrustManager implements X509TrustManager {
-//
-//        @Override
-//        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
-//
-//        @Override
-//        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
-//
-//        @Override
-//        public X509Certificate[] getAcceptedIssuers() {
-//            return null;
-//        }
-//    }
-
     public void disableCertificateValidation() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
