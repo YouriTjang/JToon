@@ -15,4 +15,12 @@ public class Token {
     public void setAccess_token(String access_token) {
         this.access_token = access_token;
     }
+
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "access_token='" + access_token + '\'' +
+                '}';
+    }
 }
