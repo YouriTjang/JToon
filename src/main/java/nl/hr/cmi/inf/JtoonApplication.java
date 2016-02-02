@@ -11,10 +11,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.util.Base64Utils;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -36,6 +38,11 @@ public class JtoonApplication implements CommandLineRunner {
     @Value("${toonapi.apitoken}")
     String APITOKEN;
 
+    @Value("${toonapi.key}")
+    String KEY;
+    @Value("${toonapi.secret}")
+    String SECRET;
+
     public static void main(String[] args) {
         SpringApplication.run(JtoonApplication.class, args);
     }
@@ -45,6 +52,7 @@ public class JtoonApplication implements CommandLineRunner {
         disableCertificateValidation();
 
         Token token = getToken();
+
         System.out.println(token);
 
         System.out.println(getAgreements(token));
@@ -56,20 +64,21 @@ public class JtoonApplication implements CommandLineRunner {
 
         con.setRequestMethod("GET");
         String bearer = "Bearer " + token.getAccess_token();
-        con.addRequestProperty("Authorization", bearer);
+        con.setRequestProperty("Authorization", bearer);
 
-//        con.setDoInput(true);
+        con.setDoInput(true);
 //        con.setDoOutput(true);
+        con.setRequestProperty( "Content-type", "application/x-www-form-urlencoded");
 
-//        con.setRequestProperty( "Content-type", "application/x-www-form-urlencoded");
 
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+                new InputStreamReader(
+                        con.getInputStream()));
         in.lines().forEach(System.out::println);
         in.close();
 
-        int responseCode = con.getResponseCode();
         System.out.println("\nSending 'GET' request to URL : " + url);
+        int responseCode = con.getResponseCode();
         System.out.println("Response Code : " + responseCode);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -85,7 +94,7 @@ public class JtoonApplication implements CommandLineRunner {
         con.setDoInput(true);
         con.setDoOutput(true);
 
-        String basicAuth = "Basic " + APITOKEN;
+        String basicAuth = "Basic " + Base64Utils.encodeToString((KEY +":"+ SECRET).getBytes());
         con.addRequestProperty("Authorization", basicAuth);
         con.addRequestProperty("Accept", "application/json");
         con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
@@ -96,7 +105,7 @@ public class JtoonApplication implements CommandLineRunner {
 
         String result = reader.lines().reduce("", String::concat);
 
-        System.out.println(result);
+//        System.out.println(result);
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(result, Token.class);
