@@ -2,6 +2,7 @@ package nl.hr.cmi.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.hr.cmi.inf.Entities.Agreement;
+import nl.hr.cmi.inf.Entities.Resource;
 import nl.hr.cmi.inf.Entities.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,18 +11,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.util.Base64Utils;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 @PropertySource("classpath:application.properties")
 @SpringBootApplication
@@ -37,8 +37,13 @@ public class JtoonApplication implements CommandLineRunner {
 
     @Value("${toonapi.key}")
     String KEY;
+
     @Value("${toonapi.secret}")
     String SECRET;
+
+    @Value("${toonapi.base_url}")
+    String BASE_URL;
+
 
     public static void main(String[] args) {
         SpringApplication.run(JtoonApplication.class, args);
@@ -52,7 +57,37 @@ public class JtoonApplication implements CommandLineRunner {
 
         System.out.println(token);
 
-        System.out.println(getAgreements(token)[0]);
+        List<Agreement> agreements = Arrays.asList(getAgreements(token));
+        agreements.stream().forEach(System.out::println);
+        Agreement agreement = agreements.get(0);
+        postAgreements(agreement, token);
+    }
+
+    public String getResource(Resource resource) throws Exception{
+        String data = String.format("grant_type=password&username=%s&password=%s", USERNAME, PASSWORD);
+        URL url = new URL(BASE_URL + resource.getUrl());
+
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setDoInput(true);
+        con.setDoOutput(true);
+
+        String basicAuth = "Basic " + Base64Utils.encodeToString((KEY +":"+ SECRET).getBytes());
+        con.addRequestProperty("Authorization", basicAuth);
+        con.addRequestProperty("Accept", "application/json");
+//        con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+
+        con.getOutputStream().write(data.getBytes("UTF-8"));
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+        String result = reader.lines().reduce("", String::concat);
+
+//        System.out.println(result);
+
+        ObjectMapper mapper = new ObjectMapper();
+        return result;//mapper.readValue(result, Token.class);
+
     }
 
     public Agreement[] getAgreements(Token token) throws Exception {
@@ -82,6 +117,41 @@ public class JtoonApplication implements CommandLineRunner {
             in.close();
         }
     }
+    public void postAgreements(Agreement agreement, Token token) throws Exception {
+        BufferedReader in = null;
+        try {
+            URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            con.setRequestMethod("POST");
+            String bearer = "Bearer " + token.getAccess_token();
+            con.setRequestProperty("Authorization", bearer);
+            con.addRequestProperty("Accept", "application/json");
+
+            con.setDoInput(true);
+            con.setDoOutput(true);
+
+            String str = new ObjectMapper().writeValueAsString(agreement);
+            System.out.println(str);
+            con.getOutputStream().write(str.getBytes("UTF-8"));
+
+            in = new BufferedReader(
+                    new InputStreamReader(
+                            con.getInputStream()));
+            String result = in.lines().reduce("", String::concat);
+            System.out.println(result);
+
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.printf("Response Code : %d ", con.getResponseCode());
+
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(result, Agreement[].class);
+        }finally {
+            in.close();
+        }
+    }
+
+
 
     public Token getToken() throws Exception {
         String data = String.format("grant_type=password&username=%s&password=%s", USERNAME, PASSWORD);

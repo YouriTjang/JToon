@@ -115,4 +115,22 @@ public class Agreement {
     public void setToonly(boolean toonly) {
         isToonly = toonly;
     }
+
+    @Override
+    public String toString() {
+        return "Agreement{" +
+                "agreementId=" + agreementId +
+                ", agreementIdChecksum='" + agreementIdChecksum + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", city='" + city + '\'' +
+                ", heatingType='" + heatingType + '\'' +
+                ", displayCommonName='" + displayCommonName + '\'' +
+                ", displayHardwareVersion='" + displayHardwareVersion + '\'' +
+                ", displaySoftwareVersion='" + displaySoftwareVersion + '\'' +
+                ", isToonSolar=" + isToonSolar +
+                ", isToonly=" + isToonly +
+                '}';
+    }
 }
