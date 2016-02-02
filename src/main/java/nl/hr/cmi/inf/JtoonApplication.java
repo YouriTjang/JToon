@@ -123,5 +123,4 @@ public class JtoonApplication implements CommandLineRunner {
             System.err.println("You've got trust issues" + e);
         }
     }
-
 }
