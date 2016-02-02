@@ -68,17 +68,13 @@ public class JtoonApplication implements CommandLineRunner {
         in.lines().forEach(System.out::println);
         in.close();
 
-
         int responseCode = con.getResponseCode();
         System.out.println("\nSending 'GET' request to URL : " + url);
         System.out.println("Response Code : " + responseCode);
-        //print result
-
 
         ObjectMapper mapper = new ObjectMapper();
         return null;//mapper.readValue(result, Agreement.class);
     }
-
 
     public Token getToken() throws Exception {
         String data = String.format("grant_type=password&username=%s&password=%s", USERNAME, PASSWORD);
