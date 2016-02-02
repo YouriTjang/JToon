@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Agreement {
     int agreementId;
-    long agreementIdChecksum;
+    String agreementIdChecksum;
+    String street;
+    String houseNumber;
+    String postalCode;
     String city;
+    String heatingType;
     String displayCommonName;
     String displayHardwareVersion;
     String displaySoftwareVersion;
-    String houseNumber;
-    String postalCode;
-    String street;
+    boolean isToonSolar;
+    boolean isToonly;
 
 
     public Agreement() {
@@ -25,12 +28,36 @@ public class Agreement {
         this.agreementId = agreementId;
     }
 
-    public long getAgreementIdChecksum() {
+    public String getAgreementIdChecksum() {
         return agreementIdChecksum;
     }
 
-    public void setAgreementIdChecksum(long agreementIdChecksum) {
+    public void setAgreementIdChecksum(String agreementIdChecksum) {
         this.agreementIdChecksum = agreementIdChecksum;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getCity() {
@@ -39,6 +66,14 @@ public class Agreement {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getHeatingType() {
+        return heatingType;
+    }
+
+    public void setHeatingType(String heatingType) {
+        this.heatingType = heatingType;
     }
 
     public String getDisplayCommonName() {
@@ -65,42 +100,19 @@ public class Agreement {
         this.displaySoftwareVersion = displaySoftwareVersion;
     }
 
-    public String getHouseNumber() {
-        return houseNumber;
+    public boolean isToonSolar() {
+        return isToonSolar;
     }
 
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setToonSolar(boolean toonSolar) {
+        isToonSolar = toonSolar;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public boolean isToonly() {
+        return isToonly;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    @Override
-    public String toString() {
-        return "Agreement{" +
-                "agreementId=" + agreementId +
-                ", agreementIdChecksum=" + agreementIdChecksum +
-                ", city='" + city + '\'' +
-                ", displayCommonName='" + displayCommonName + '\'' +
-                ", displayHardwareVersion='" + displayHardwareVersion + '\'' +
-                ", displaySoftwareVersion='" + displaySoftwareVersion + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", street='" + street + '\'' +
-                '}';
+    public void setToonly(boolean toonly) {
+        isToonly = toonly;
     }
 }

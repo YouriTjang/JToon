@@ -35,9 +35,6 @@ public class JtoonApplication implements CommandLineRunner {
     @Value("${toonapi.password}")
     String PASSWORD;
 
-    @Value("${toonapi.apitoken}")
-    String APITOKEN;
-
     @Value("${toonapi.key}")
     String KEY;
     @Value("${toonapi.secret}")
@@ -55,34 +52,35 @@ public class JtoonApplication implements CommandLineRunner {
 
         System.out.println(token);
 
-        System.out.println(getAgreements(token));
+        System.out.println(getAgreements(token)[0]);
     }
 
-    public Agreement getAgreements(Token token) throws Exception {
-        URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
-        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+    public Agreement[] getAgreements(Token token) throws Exception {
+        BufferedReader in = null;
+        try {
+            URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 
-        con.setRequestMethod("GET");
-        String bearer = "Bearer " + token.getAccess_token();
-        con.setRequestProperty("Authorization", bearer);
+            con.setRequestMethod("GET");
+            String bearer = "Bearer " + token.getAccess_token();
+            con.setRequestProperty("Authorization", bearer);
 
-        con.setDoInput(true);
-//        con.setDoOutput(true);
-        con.setRequestProperty( "Content-type", "application/x-www-form-urlencoded");
+            con.setDoInput(true);
 
+            in = new BufferedReader(
+                    new InputStreamReader(
+                            con.getInputStream()));
+            String result = in.lines().reduce("", String::concat);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(
-                        con.getInputStream()));
-        in.lines().forEach(System.out::println);
-        in.close();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            int responseCode = con.getResponseCode();
+            System.out.println("Response Code : " + responseCode);
 
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        int responseCode = con.getResponseCode();
-        System.out.println("Response Code : " + responseCode);
-
-        ObjectMapper mapper = new ObjectMapper();
-        return null;//mapper.readValue(result, Agreement.class);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(result, Agreement[].class);
+        }finally {
+            in.close();
+        }
     }
 
     public Token getToken() throws Exception {
