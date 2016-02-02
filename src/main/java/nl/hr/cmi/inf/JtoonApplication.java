@@ -1,9 +1,7 @@
 package nl.hr.cmi.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.hr.cmi.inf.Entities.Agreement;
-import nl.hr.cmi.inf.Entities.Resource;
-import nl.hr.cmi.inf.Entities.Token;
+import nl.hr.cmi.inf.Entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +14,8 @@ import org.springframework.util.Base64Utils;
 import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -55,42 +55,100 @@ public class JtoonApplication implements CommandLineRunner {
 
         Token token = getToken();
 
-        System.out.println(token);
+        System.out.println(token.toString());
 
         List<Agreement> agreements = Arrays.asList(getAgreements(token));
         agreements.stream().forEach(System.out::println);
         Agreement agreement = agreements.get(0);
-        postAgreements(agreement, token);
+        if( isDeviceSet(agreement, token) ){
+            getPrograms(token);
+        }
+        
     }
 
-    public String getResource(Resource resource) throws Exception{
-        String data = String.format("grant_type=password&username=%s&password=%s", USERNAME, PASSWORD);
-        URL url = new URL(BASE_URL + resource.getUrl());
+    public List<State> getTemperatureStates(Token token) throws Exception{
+        BufferedReader in = null;
+        try {
+            URL url = new URL("https://api.toonapi.com/toon/api/v1/temperature/states");
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token.getAccess_token());
+            con.setDoInput(true);
+
+            in = new BufferedReader(
+                    new InputStreamReader(
+                            con.getInputStream()));
+            String result = in.lines().reduce("", String::concat);
+
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            int responseCode = con.getResponseCode();
+            System.out.println("Response Code : " + responseCode);
+
+            ObjectMapper mapper = new ObjectMapper();
+            return Arrays.asList(mapper.readValue(result, State[].class));
+        }finally {
+            in.close();
+        }
+    }
+
+
+    public List<Program> getPrograms(Token token) throws Exception{
+        BufferedReader in = null;
+        try {
+            URL url = new URL("https://api.toonapi.com/toon/api/v1/temperature/programs");
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token.getAccess_token());
+            con.setDoInput(true);
+
+            in = new BufferedReader(
+                    new InputStreamReader(
+                            con.getInputStream()));
+            String result = in.lines().reduce("", String::concat);
+
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            int responseCode = con.getResponseCode();
+            System.out.println("Response Code : " + responseCode);
+
+            ObjectMapper mapper = new ObjectMapper();
+            return Arrays.asList(mapper.readValue(result, Program[].class));
+        }finally {
+            in.close();
+        }
+    }
+
+    public boolean putTemperature(Token token, int value, String scale) throws Exception{
+        URL url = new URL("https://api.toonapi.com/toon/api/v1/temperature");
 
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
+        try {
+            con.setRequestMethod("PUT");
+        }catch(ProtocolException pe){
+            System.err.println("Protocol exception" + pe);
+        }catch(SecurityException se){
+            System.err.println("SecurityException exception" + se);
+        }
+
         con.setDoInput(true);
         con.setDoOutput(true);
 
-        String basicAuth = "Basic " + Base64Utils.encodeToString((KEY +":"+ SECRET).getBytes());
-        con.addRequestProperty("Authorization", basicAuth);
-        con.addRequestProperty("Accept", "application/json");
-//        con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+        con.setRequestProperty("Authorization",  "Bearer " + token.getAccess_token());
+        con.addRequestProperty("Content-Type", "application/json");
 
+        System.out.printf("Putting temperature to: %d %s", value, scale);
+
+        String data = String.format("\"value\": %d, \"scale\": %s", value, scale);
         con.getOutputStream().write(data.getBytes("UTF-8"));
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        System.out.printf("Response Code : %d \n", con.getResponseCode());
 
-        String result = reader.lines().reduce("", String::concat);
-
-//        System.out.println(result);
-
-        ObjectMapper mapper = new ObjectMapper();
-        return result;//mapper.readValue(result, Token.class);
-
+        return con.getResponseCode() == HttpURLConnection.HTTP_OK;
     }
 
-    public Agreement[] getAgreements(Token token) throws Exception {
+
+        public Agreement[] getAgreements(Token token) throws Exception {
         BufferedReader in = null;
         try {
             URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
@@ -99,7 +157,6 @@ public class JtoonApplication implements CommandLineRunner {
             con.setRequestMethod("GET");
             String bearer = "Bearer " + token.getAccess_token();
             con.setRequestProperty("Authorization", bearer);
-
             con.setDoInput(true);
 
             in = new BufferedReader(
@@ -117,38 +174,33 @@ public class JtoonApplication implements CommandLineRunner {
             in.close();
         }
     }
-    public void postAgreements(Agreement agreement, Token token) throws Exception {
-        BufferedReader in = null;
+
+
+    public boolean isDeviceSet(Agreement agreement, Token token) throws Exception {
+        URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
+
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         try {
-            URL url = new URL("https://api.toonapi.com/toon/api/v1/agreements");
-            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-
             con.setRequestMethod("POST");
-            String bearer = "Bearer " + token.getAccess_token();
-            con.setRequestProperty("Authorization", bearer);
-            con.addRequestProperty("Accept", "application/json");
-
-            con.setDoInput(true);
-            con.setDoOutput(true);
-
-            String str = new ObjectMapper().writeValueAsString(agreement);
-            System.out.println(str);
-            con.getOutputStream().write(str.getBytes("UTF-8"));
-
-            in = new BufferedReader(
-                    new InputStreamReader(
-                            con.getInputStream()));
-            String result = in.lines().reduce("", String::concat);
-            System.out.println(result);
-
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.printf("Response Code : %d ", con.getResponseCode());
-
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(result, Agreement[].class);
-        }finally {
-            in.close();
+        }catch(ProtocolException pe){
+            System.err.println("Protocol exception" + pe);
+        }catch(SecurityException se){
+            System.err.println("SecurityException exception" + se);
         }
+
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        
+        con.setRequestProperty("Authorization",  "Bearer " + token.getAccess_token());
+        con.addRequestProperty("Content-Type", "application/json");
+
+        System.out.println("Posting agreements");
+        String data = new ObjectMapper().writeValueAsString(agreement);
+        con.getOutputStream().write(data.getBytes("UTF-8"));
+
+        System.out.printf("Response Code : %d \n", con.getResponseCode());
+
+        return con.getResponseCode() == HttpURLConnection.HTTP_OK;
     }
 
 
@@ -168,13 +220,10 @@ public class JtoonApplication implements CommandLineRunner {
         con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
         con.getOutputStream().write(data.getBytes("UTF-8"));
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
         String result = reader.lines().reduce("", String::concat);
-
-//        System.out.println(result);
-
+        
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(result, Token.class);
     }

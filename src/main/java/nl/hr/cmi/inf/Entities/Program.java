@@ -1,6 +1,8 @@
 package nl.hr.cmi.inf.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class Program extends Resource{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Program{
     String type;
     int startDayOfWeek;
     int startHour;
@@ -11,7 +13,6 @@ public class Program extends Resource{
     State targetState;
 
     public Program() {
-        this.url = "/temperature/programs";
     }
 
     public String getType() {
