@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+//import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
@@ -21,7 +21,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "op"
 })
 public class Year {
-
     @JsonProperty("timstamp")
     private Integer timstamp;
     @JsonProperty("value")
@@ -113,10 +112,10 @@ public class Year {
         this.op = op;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+    //@Override
+    //public String toString() {
+    //    return ToStringBuilder.reflectionToString(this);
+   // }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
