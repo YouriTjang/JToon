@@ -18,7 +18,6 @@ public class CompareController {
         System.out.println(getMinContract());
     }
 
-
     private static ContractUsage getMinContract() {
         UsageController usageController = new UsageController();
         Usage usage = usageController.getUsage();
