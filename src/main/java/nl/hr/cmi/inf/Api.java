@@ -1,10 +1,7 @@
 package nl.hr.cmi.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.hr.cmi.inf.dtos.Agreement;
-import nl.hr.cmi.inf.dtos.Program;
-import nl.hr.cmi.inf.dtos.State;
-import nl.hr.cmi.inf.dtos.Token;
+import nl.hr.cmi.inf.dtos.*;
 import org.springframework.util.Base64Utils;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -20,7 +17,7 @@ public class Api {
 
 
 
-    public List<State> getTemperatureStates(Token token) throws Exception{
+    public States getTemperatureStates(Token token) throws Exception{
         BufferedReader in = null;
         try {
             URL url = new URL("https://api.toonapi.com/toon/api/v1/temperature/states");
@@ -38,9 +35,9 @@ public class Api {
             System.out.println("\nSending 'GET' request to URL : " + url);
             int responseCode = con.getResponseCode();
             System.out.println("Response Code : " + responseCode);
-
+            System.out.println(result);
             ObjectMapper mapper = new ObjectMapper();
-            return Arrays.asList(mapper.readValue(result, State[].class));
+           return mapper.readValue(result, States.class);
         }finally {
             in.close();
         }
