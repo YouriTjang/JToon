@@ -34,7 +34,7 @@ public class Hour {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     * 
+     *
      * @return
      *     The timstamp
      */
@@ -44,7 +44,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param timstamp
      *     The timstamp
      */
@@ -54,7 +54,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @return
      *     The value
      */
@@ -64,7 +64,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param value
      *     The value
      */
@@ -74,7 +74,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @return
      *     The pk
      */
@@ -84,7 +84,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param pk
      *     The pk
      */
@@ -94,7 +94,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @return
      *     The op
      */
@@ -104,7 +104,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param op
      *     The op
      */
