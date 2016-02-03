@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+//import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
@@ -34,7 +34,7 @@ public class Hour {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     * 
+     *
      * @return
      *     The timstamp
      */
@@ -44,7 +44,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param timstamp
      *     The timstamp
      */
@@ -54,7 +54,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @return
      *     The value
      */
@@ -64,7 +64,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param value
      *     The value
      */
@@ -74,7 +74,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @return
      *     The pk
      */
@@ -84,7 +84,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param pk
      *     The pk
      */
@@ -94,7 +94,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @return
      *     The op
      */
@@ -104,7 +104,7 @@ public class Hour {
     }
 
     /**
-     * 
+     *
      * @param op
      *     The op
      */
@@ -113,10 +113,10 @@ public class Hour {
         this.op = op;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToStringBuilder.reflectionToString(this);
+//    }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
