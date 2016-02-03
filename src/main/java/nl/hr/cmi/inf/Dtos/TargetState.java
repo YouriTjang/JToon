@@ -1,4 +1,4 @@
-package nl.hr.cmi.inf.Entities;
+package nl.hr.cmi.inf.dtos;
 
 public class TargetState {
     int id;

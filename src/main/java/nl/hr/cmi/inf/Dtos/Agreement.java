@@ -1,4 +1,4 @@
-package nl.hr.cmi.inf.Entities;
+package nl.hr.cmi.inf.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

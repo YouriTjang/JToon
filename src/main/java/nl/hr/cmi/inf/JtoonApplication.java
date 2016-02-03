@@ -1,6 +1,7 @@
 package nl.hr.cmi.inf;
 
-import nl.hr.cmi.inf.Entities.*;
+import nl.hr.cmi.inf.dtos.Agreement;
+import nl.hr.cmi.inf.dtos.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,10 +59,4 @@ public class JtoonApplication implements CommandLineRunner {
         }
         
     }
-
-
-
-
-
-
 }

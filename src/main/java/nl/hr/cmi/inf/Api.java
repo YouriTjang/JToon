@@ -1,10 +1,10 @@
 package nl.hr.cmi.inf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.hr.cmi.inf.Entities.Agreement;
-import nl.hr.cmi.inf.Entities.Program;
-import nl.hr.cmi.inf.Entities.State;
-import nl.hr.cmi.inf.Entities.Token;
+import nl.hr.cmi.inf.dtos.Agreement;
+import nl.hr.cmi.inf.dtos.Program;
+import nl.hr.cmi.inf.dtos.State;
+import nl.hr.cmi.inf.dtos.Token;
 import org.springframework.util.Base64Utils;
 
 import javax.net.ssl.HttpsURLConnection;

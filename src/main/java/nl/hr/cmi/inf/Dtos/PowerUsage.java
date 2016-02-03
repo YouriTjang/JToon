@@ -1,26 +1,20 @@
-package nl.hr.cmi.inf.Entities;
+package nl.hr.cmi.inf.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GasUsage {
-    float avgDayValue;
+public class PowerUsage {
     float avgValue;
     float dayCost;
+    float dayCostProduced;
+    long dayLowUsage;
     long dayUsage;
     boolean isSmart;
     long meterReading;
-    float value;
+    long meterReadingLow;
+    long value;
+    long valueProduced;
 
-
-    public GasUsage() {
-    }
-
-    public float getAvgDayValue() {
-        return avgDayValue;
-    }
-
-    public void setAvgDayValue(float avgDayValue) {
-        this.avgDayValue = avgDayValue;
+    public PowerUsage() {
     }
 
     public float getAvgValue() {
@@ -37,6 +31,22 @@ public class GasUsage {
 
     public void setDayCost(float dayCost) {
         this.dayCost = dayCost;
+    }
+
+    public float getDayCostProduced() {
+        return dayCostProduced;
+    }
+
+    public void setDayCostProduced(float dayCostProduced) {
+        this.dayCostProduced = dayCostProduced;
+    }
+
+    public long getDayLowUsage() {
+        return dayLowUsage;
+    }
+
+    public void setDayLowUsage(long dayLowUsage) {
+        this.dayLowUsage = dayLowUsage;
     }
 
     public long getDayUsage() {
@@ -63,12 +73,27 @@ public class GasUsage {
         this.meterReading = meterReading;
     }
 
-    public float getValue() {
+    public long getMeterReadingLow() {
+        return meterReadingLow;
+    }
+
+    public void setMeterReadingLow(long meterReadingLow) {
+        this.meterReadingLow = meterReadingLow;
+    }
+
+    public long getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(long value) {
         this.value = value;
     }
-}
 
+    public long getValueProduced() {
+        return valueProduced;
+    }
+
+    public void setValueProduced(long valueProduced) {
+        this.valueProduced = valueProduced;
+    }
+}

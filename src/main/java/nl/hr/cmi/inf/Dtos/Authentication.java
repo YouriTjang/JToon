@@ -1,4 +1,4 @@
-package nl.hr.cmi.inf.Entities;
+package nl.hr.cmi.inf.dtos;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
