@@ -56,6 +56,7 @@ public class JtoonApplication implements CommandLineRunner {
 
             //
             api.getPrograms(token);
+            api.getTemperatureStates(token);
         }
         
     }
