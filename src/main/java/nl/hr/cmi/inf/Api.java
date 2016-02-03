@@ -14,9 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Api {
-
-
-
     public States getTemperatureStates(Token token) throws Exception{
         BufferedReader in = null;
         try {
