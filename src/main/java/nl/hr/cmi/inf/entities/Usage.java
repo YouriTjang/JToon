@@ -13,9 +13,14 @@ public class Usage {
     @GeneratedValue(strategy= GenerationType.AUTO)
     long id;
 
-
     int electriciteit;
     int gas;
 
     Duration duration;
+
+    public Usage(int electriciteit, int gas, Duration duration) {
+        this.electriciteit = electriciteit;
+        this.gas = gas;
+        this.duration = duration;
+    }
 }
