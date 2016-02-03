@@ -3,7 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Agreement {
-    int agreementId;
+    String agreementId;
     String agreementIdChecksum;
     String street;
     String houseNumber;
@@ -20,11 +20,11 @@ public class Agreement {
     public Agreement() {
     }
 
-    public int getAgreementId() {
+    public String getAgreementId() {
         return agreementId;
     }
 
-    public void setAgreementId(int agreementId) {
+    public void setAgreementId(String agreementId) {
         this.agreementId = agreementId;
     }
 
