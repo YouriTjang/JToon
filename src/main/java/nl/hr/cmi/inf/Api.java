@@ -179,7 +179,7 @@ public class Api {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(result, Token.class);
     }
-    public List<PowerUsage> getPowerUsage(Token token) throws Exception{
+    public Power getPowerUsage(Token token) throws Exception{
         BufferedReader in = null;
         try {
             URL url = new URL("https://api.toonapi.com/toon/api/v1/consumption/electricity/flows");
@@ -199,7 +199,7 @@ public class Api {
             System.out.println("Response Code : " + responseCode);
 
             ObjectMapper mapper = new ObjectMapper();
-            return Arrays.asList(mapper.readValue(result, PowerUsage[].class));
+            return mapper.readValue(result, Power.class);
         }finally {
             in.close();
         }

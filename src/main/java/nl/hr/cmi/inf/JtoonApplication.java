@@ -56,8 +56,11 @@ public class JtoonApplication implements CommandLineRunner {
             //
             api.getPrograms(token);
             States s = api.getTemperatureStates(token);
-            api.getPowerUsage(token);
-
+            Power p = api.getPowerUsage(token);
+            for (Day d: p.getDays()
+                 ) {
+                System.out.println(d.toString());
+            }
 
         }
         

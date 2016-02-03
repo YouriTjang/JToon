@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class Year {
     @JsonProperty("timstamp")
-    private Integer timstamp;
+    private Long timstamp;
     @JsonProperty("value")
     private Integer value;
     @JsonProperty("pk")
@@ -38,7 +38,7 @@ public class Year {
      *     The timstamp
      */
     @JsonProperty("timstamp")
-    public Integer getTimstamp() {
+    public Long getTimstamp() {
         return timstamp;
     }
 
@@ -48,7 +48,7 @@ public class Year {
      *     The timstamp
      */
     @JsonProperty("timstamp")
-    public void setTimstamp(Integer timstamp) {
+    public void setTimstamp(Long timstamp) {
         this.timstamp = timstamp;
     }
 
